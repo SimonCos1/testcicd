@@ -22,4 +22,4 @@ jobs:
       run: |
         rsync -avz --delete \
           -e "ssh -o StrictHostKeyChecking=no" \
-          ./ sc3ievr8380@scievr8380.universe.wf:/home/sc3ievr8380/repositories/testcicd
+          ./ sc3ievr8380@109.234.164.243:/home/sc3ievr8380/repositories/testcicd
