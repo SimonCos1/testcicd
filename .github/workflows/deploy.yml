@@ -23,4 +23,4 @@ jobs:
         sudo apt-get install -y rsync lftp
         
         # Déployez votre code via rsync ou lftp
-        lftp -u $HOST_USER,$HOST_PASSWORD $HOST < <(echo "mirror -Rev /path/to/local/code /path/to/remote/code")
+        lftp -u $HOST_USER,$HOST_PASSWORD $HOST < <(echo "mirror -Rev / /home/sc3ievr8380/repositories/testcicd	")
