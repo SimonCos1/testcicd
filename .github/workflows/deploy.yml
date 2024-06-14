@@ -1,4 +1,4 @@
-name: Deploy to cPanel
+name: Deploy to cPanel via lftp
 
 on:
   push:
@@ -13,13 +13,13 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Setup SSH
-      uses: webfactory/ssh-agent@v0.5.3
-      with:
-        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+    - name: Install lftp
+      run: sudo apt-get install -y lftp
 
     - name: Deploy to cPanel
+      env:
+        FTP_HOST: ${{ secrets.FTP_HOST }}
+        FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+        FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
       run: |
-        rsync -avz --delete \
-          -e "ssh -o StrictHostKeyChecking=no" \
-          ./ sc3ievr8380@109.234.164.243:/home/sc3ievr8380/repositories/testcicd
+        lftp -c "set ftp:ssl-allow no; open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_HOST; mirror -R ./ /home/sc3ievr8380/repositories/testcicd"
