@@ -1,22 +1,25 @@
-name: Deploy to Cpanel
+name: Deploy to cPanel
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main  # ou la branche de votre choix
 
 jobs:
-
   deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Deploy to Cpanel
-      env:
-        HOST_USER: ${{ secrets.HOST_USER }}
-        HOST_PASSWORD: ${{ secrets.HOST_PASSWORD }}
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup SSH
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: Deploy to cPanel
       run: |
-        sudo apt-get update
-        sudo apt-get install -y rsync lftp
-        lftp -u $HOST_USER,$HOST_PASSWORD $HOST < <(echo "mirror -Rev /path/to/local/code /path/to/remote/code")
+        rsync -avz --delete \
+          -e "ssh -o StrictHostKeyChecking=no" \
+          ./ user@hostname:/path/to/your/site
