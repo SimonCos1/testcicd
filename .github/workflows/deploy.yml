@@ -1,0 +1,26 @@
+yaml
+name: Deploy to Cpanel
+
+on:
+  push:
+    branches: [ main ] # Remplacez par votre branche de production
+
+jobs:
+
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Deploy to Cpanel
+      env:
+        HOST_USER: ${{ secrets.HOST_USER }}
+        HOST_PASSWORD: ${{ secrets.HOST_PASSWORD }}
+      run: |
+        # Installez les dépendances nécessaires (rsync, lftp, etc.)
+        sudo apt-get update
+        sudo apt-get install -y rsync lftp
+        
+        # Déployez votre code via rsync ou lftp
+        lftp -u $HOST_USER,$HOST_PASSWORD $HOST < <(echo "mirror -Rev /path/to/local/code /path/to/remote/code")
